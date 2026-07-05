@@ -1,0 +1,5 @@
+node_modules/
+podium.db
+podium.db-shm
+podium.db-wal
+.env

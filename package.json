@@ -1,0 +1,18 @@
+{
+  "name": "podium-interview-coach",
+  "version": "1.0.0",
+  "private": true,
+  "description": "AI-style mock interview coach — Express backend, Node's built-in SQLite, no paid services required.",
+  "main": "server.js",
+  "engines": {
+    "node": ">=22.5.0"
+  },
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "express": "^4.19.2"
+  }
+}

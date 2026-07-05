@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Podium — AI Mock Interview Coach</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@500;600;700;800&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div id="app">
+
+  <header class="topbar" id="topbar" hidden>
+    <div class="brand"><span class="dot"></span><span>Podium</span><small>AI INTERVIEW COACH</small></div>
+    <div class="nav-right">
+      <span class="who">Signed in as <b id="whoName"></b></span>
+      <button class="btn btn-ghost btn-sm" id="themeToggle" title="Toggle light/dark theme">🌙</button>
+      <button class="btn btn-ghost btn-sm" id="navDashboard">Dashboard</button>
+      <button class="btn btn-ghost btn-sm" id="navLogout">Log out</button>
+    </div>
+  </header>
+
+  <!-- ================= AUTH ================= -->
+  <section class="screen active" id="screen-auth">
+    <div class="auth-wrap">
+      <div class="auth-card">
+        <div class="brand" style="margin-bottom:20px;"><span class="dot"></span><span>Podium</span></div>
+        <h1 id="authTitle">Welcome back</h1>
+        <p class="sub" id="authSub">Log in to keep practicing and track your progress.</p>
+        <div class="error-msg" id="authError"></div>
+        <div class="field">
+          <label>Full name</label>
+          <input type="text" id="authName" placeholder="e.g. Aditi Sharma" />
+        </div>
+        <div class="field">
+          <label>Passcode</label>
+          <input type="password" id="authPass" placeholder="Choose any passcode" />
+        </div>
+        <button class="btn btn-primary" id="authSubmit" style="width:100%; padding:12px;">Log in</button>
+        <div class="auth-toggle" id="authToggleWrap">
+          New here? <a id="authToggle">Create an account</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= DASHBOARD ================= -->
+  <section class="screen" id="screen-dashboard">
+    <div class="hero-row">
+      <div>
+        <h1>Practice room</h1>
+        <p>Every rep builds the calm you'll walk in with. Let's get you interview-ready.</p>
+      </div>
+      <button class="btn btn-primary" id="startNewBtn">+ Start new interview</button>
+    </div>
+
+    <div class="stat-grid" id="statGrid"></div>
+
+    <div id="spotlightWrap"></div>
+
+    <div class="panel-block">
+      <h3>Confidence trend <span class="mono" style="font-size:11px; color:var(--muted); font-weight:400;">last sessions</span></h3>
+      <div id="trendWrap"></div>
+    </div>
+
+    <div class="panel-block">
+      <h3>Streak &amp; badges</h3>
+      <div id="badgesWrap"></div>
+    </div>
+
+    <div class="panel-block">
+      <h3>Session history</h3>
+      <div class="session-list" id="sessionList"></div>
+    </div>
+
+    <div class="panel-block">
+      <h3>Leaderboard <button class="btn btn-ghost btn-sm" id="toggleLeaderboardBtn" style="margin-left:auto;">Show</button></h3>
+      <div id="leaderboardWrap" style="display:none;"></div>
+    </div>
+  </section>
+
+  <!-- ================= SETUP ================= -->
+  <section class="screen" id="screen-setup">
+    <div class="hero-row">
+      <div>
+        <h1>Set up your mock interview</h1>
+        <p>Pick a role and format — the questions and scoring adjust to match.</p>
+      </div>
+    </div>
+    <div class="setup-grid">
+      <div>
+        <div class="panel-block">
+          <h3>1. Choose your role</h3>
+          <div class="role-grid" id="roleGrid"></div>
+        </div>
+        <div class="panel-block">
+          <h3>2. Choose interview type</h3>
+          <div class="type-toggle" id="typeToggle">
+            <div class="opt" data-type="nontech">
+              <h4>HR / Behavioural</h4>
+              <p>Introductions, strengths, goals — the questions every interview opens with.</p>
+            </div>
+            <div class="opt" data-type="tech">
+              <h4>Technical + HR</h4>
+              <p>A short intro round plus role-specific technical questions.</p>
+            </div>
+            <div class="opt" data-type="amazon">
+              <h4>Amazon-style · Leadership Principles</h4>
+              <p>Behavioural questions modeled on Amazon's leadership principles round.</p>
+            </div>
+            <div class="opt" data-type="startup">
+              <h4>Startup · Culture-fit round</h4>
+              <p>Ambiguity, ownership, and scrappiness — the questions early-stage startups ask.</p>
+            </div>
+          </div>
+        </div>
+        <div class="panel-block">
+          <h3>3. Personalize with your resume <span class="mono" style="font-size:11px; color:var(--muted); font-weight:400;">optional</span></h3>
+          <div class="field" style="margin-bottom:0;">
+            <textarea id="resumeText" placeholder="Paste your resume text here — we'll pull out a couple of skills or projects and build 2 personalized questions around them." style="min-height:110px; resize:vertical;"></textarea>
+          </div>
+          <div class="hint-note" id="resumeHint"></div>
+        </div>
+      </div>
+      <div>
+        <div class="panel-block">
+          <h3>4. Camera &amp; mic check</h3>
+          <div class="cam-preview-wrap" id="setupCamWrap">
+            <div class="cam-placeholder" id="setupCamPlaceholder">
+              <span>🎥</span>
+              <span>Your camera preview will appear here.<br>We only analyze motion &amp; audio locally — nothing is uploaded.</span>
+            </div>
+            <video id="setupVideo" autoplay muted playsinline style="display:none;"></video>
+            <div class="tally" id="setupTally"><span class="dot"></span> CAMERA OFF</div>
+          </div>
+          <button class="btn" id="enableCamBtn" style="width:100%; margin-top:12px;">Enable camera &amp; mic</button>
+          <button class="btn btn-primary" id="beginInterviewBtn" style="width:100%; margin-top:10px;" disabled>Begin interview</button>
+          <div class="hint-note" id="setupHint"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= INTERVIEW ================= -->
+  <section class="screen" id="screen-interview">
+    <div class="interview-grid">
+      <div>
+        <div class="cam-preview-wrap" style="aspect-ratio:4/3.2; margin-bottom:16px;">
+          <video id="liveVideo" autoplay muted playsinline></video>
+          <div class="tally live" id="liveTally"><span class="dot"></span> READY</div>
+        </div>
+        <div class="qcard">
+          <div class="progress-track"><div class="progress-fill" id="progressFill" style="width:0%;"></div></div>
+          <div class="qnum" id="qNum">Question 1 of 6</div>
+          <h2 id="qText">Loading question…</h2>
+          <button class="btn btn-ghost btn-sm" id="togglePhraseBtn" type="button" style="margin-bottom:6px;">💡 Don't know how to answer? See a sample answer</button>
+          <div class="phrase-content" id="phraseContent" style="display:none;"></div>
+          <div class="timer-row">
+            <div class="timer mono" id="timerDisplay">00:00</div>
+            <div style="font-size:12px; color:var(--muted); font-family:'IBM Plex Mono',monospace;" id="wpmLive"></div>
+          </div>
+          <div class="controls-row">
+            <button class="btn btn-primary" id="startAnswerBtn" style="flex:1;">● Start answer</button>
+            <button class="btn btn-danger" id="stopAnswerBtn" style="flex:1;" disabled>■ Stop answer</button>
+          </div>
+          <div class="live-transcript" id="liveTranscript">Your spoken words will appear here as you talk…</div>
+          <div class="manual-fallback" id="manualFallbackWrap" style="display:none;">
+            <label class="hint-note" style="display:block; margin-bottom:6px;">Speech recognition isn't available in this browser. Type roughly what you said so we can still score your content:</label>
+            <textarea id="manualAnswer" placeholder="Type your answer here after speaking, then click Stop answer…"></textarea>
+          </div>
+          <div class="hint-note">Tip: aim for 45–90 seconds. Speak as you would to a real interviewer.</div>
+        </div>
+      </div>
+
+      <div class="feedback-panel" id="feedbackPanel">
+        <div class="placeholder-feedback">Your feedback for this question will appear here once you stop recording.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= REPORT ================= -->
+  <section class="screen" id="screen-report">
+    <div class="report-head" id="reportHead"></div>
+    <div id="comparisonPanel"></div>
+    <h3 style="margin-bottom:14px;">Question-by-question review</h3>
+    <div class="qa-review" id="qaReview"></div>
+    <div class="report-actions">
+      <button class="btn btn-primary" id="backToDashBtn">Back to dashboard</button>
+      <button class="btn" id="retryInterviewBtn">Practice this role again</button>
+    </div>
+  </section>
+
+  <p class="footnote">Podium runs entirely in your browser. Confidence scoring is an <b>estimate</b> based on your speech pace, filler words, voice steadiness and on-camera stillness — it's a practice aid, not a certified assessment.</p>
+</div>
+
+<canvas id="hiddenCanvas" width="64" height="48" style="display:none;"></canvas>
+
+<script src="app.js"></script>
+</body>
+</html>
