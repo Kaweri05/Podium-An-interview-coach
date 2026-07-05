@@ -1,89 +1,92 @@
-# Podium — AI-Style Mock Interview Coach
+---
+title: Podium AI Interview Coach
+emoji: 🎤
+colorFrom: yellow
+colorTo: pink
+sdk: docker
+app_port: 7860
+pinned: false
+---
 
-A free, self-hosted mock interview practice app. Practice on camera, get
-heuristic confidence scoring (fluency, pace, voice, composure, content),
-and track your progress over time — no paid services required.
+# 🎤 Podium — AI-Style Mock Interview Coach
+
+**Practice interviews on camera and get instant, data-driven confidence feedback — built end-to-end with a custom scoring engine, a real backend, and zero paid services.**
+
+![Node](https://img.shields.io/badge/node-%3E%3D22.5.0-339933?logo=node.js&logoColor=white)
+![Express](https://img.shields.io/badge/backend-Express-000000?logo=express&logoColor=white)
+![SQLite](https://img.shields.io/badge/database-SQLite-003B57?logo=sqlite&logoColor=white)
+![Docker](https://img.shields.io/badge/deploy-Docker-2496ED?logo=docker&logoColor=white)
+![License](https://img.shields.io/badge/license-MIT-blue)
+
+**🔗 Live demo:** [huggingface.co/spaces/cleve05/Podium-An-interview-coach](https://cleve05-podium-an-interview-coach.hf.space)
+**💻 Source:** [github.com/Kaweri05/Podium-An-interview-coach](https://github.com/Kaweri05/Podium-An-interview-coach)
 
 ---
+
+## Table of Contents
+
+- [Overview](#overview)
+- [Features](#features)
+- [Tech Stack](#tech-stack)
+- [Architecture & Flow Diagrams](#architecture--flow-diagrams)
+- [Getting Started](#getting-started)
+- [Project Structure](#project-structure)
+- [Deployment](#deployment)
+- [Roadmap](#roadmap)
+- [License](#license)
+
+---
+
+## Overview
+
+Many students freeze up in real interviews simply from lack of practice —
+not lack of ability. **Podium** is a self-hosted mock interview platform
+that turns any webcam into a practice partner: it asks real interview
+questions, listens and watches while you answer, and scores your
+delivery on the same things a real interviewer notices — filler words,
+pacing, voice steadiness, on-camera composure, and answer depth.
+
+Everything runs on a stack I designed to be genuinely free to run and
+deploy: no ML API costs, no managed database bills, no paid hosting
+tier required.
 
 ## Features
 
-- Camera + mic mock interviews with live speech-to-text
-- Confidence scoring from real signals: filler words, speaking pace,
-  voice steadiness, on-camera stillness, answer length
-- Role-specific technical questions (12 tracks) + HR/behavioural rounds
-- Company-style rounds: Amazon Leadership Principles, Startup culture-fit
-- Resume-based personalized questions (paste your resume, get tailored
-  questions about your actual projects/skills)
-- Sample answers for every question, for students new to interviewing
-- Dashboard: confidence trend, streaks, badges, weakest-skill spotlight
-- Opt-in peer leaderboard
-- Dark/light theme
-- Accounts + interview history stored in a real backend (Express + SQLite)
-
----
+- 🎥 **Camera + mic mock interviews** with live browser-based speech-to-text
+- 📊 **Heuristic confidence scoring** across 5 dimensions — fluency, pace,
+  voice steadiness, composure, and content — computed from real signals
+  (filler-word rate, words-per-minute, mic RMS volume, canvas frame-diff
+  motion detection)
+- 🧑‍💼 **Role-specific technical rounds** across 12 career tracks
+  (Software Engineer, Data Analyst, Marketing, Finance, Mechanical/Civil/
+  Electrical Engineering, and more)
+- 🏢 **Company-style rounds** — Amazon Leadership Principles, Startup
+  culture-fit
+- 📄 **Resume-based question generation** — paste a resume, get questions
+  built around the candidate's actual projects and skills
+- 💡 **Sample answers** for every question, for students new to interviewing
+- 📈 **Dashboard** — confidence trend over time, day-streaks, unlockable
+  badges, and a "weakest skill" spotlight with targeted tips
+- 🏆 **Opt-in peer leaderboard** — useful for a college placement-cell setting
+- 🌗 **Dark/light theme**
+- 🔐 **Real backend** — accounts and interview history persisted in SQLite,
+  not just `localStorage`
 
 ## Tech Stack
 
-| Layer | Technology |
-|---|---|
-| Frontend | Plain HTML / CSS / JS (`public/`) |
-| Backend | Express (`server.js`) |
-| Database | `node:sqlite` — Node's built-in SQLite module |
-| Auth | bcrypt password hashing + random session tokens |
+| Layer | Technology | Why |
+|---|---|---|
+| Frontend | Vanilla HTML / CSS / JS | No build step, fully transparent, fast to iterate on |
+| Backend | Express (Node.js) | Minimal, well-understood REST API layer |
+| Database | `node:sqlite` (Node's built-in SQLite) | Zero extra dependencies, zero native compilation, zero cost |
+| Auth | bcrypt password hashing + token sessions | Simple, secure enough for a personal project, easy to upgrade to JWT later |
+| Deployment | Docker → Hugging Face Spaces | Free, container-based, no serverless filesystem limitations |
 
-No paid APIs, no external database service, no native modules to compile.
+**Browser APIs used for scoring (no ML models, no external AI calls):**
+Web Speech API (transcript), Web Audio API (volume/RMS), Canvas frame-diff
+(motion/composure).
 
----
-
-## Project Structure
-
-See **`structure.txt`** for the full annotated file tree.
-
-```
-Podium/
-├── server.js
-├── package.json
-├── node.txt
-├── structure.txt
-├── README.md
-├── Dockerfile
-├── .dockerignore
-├── .gitignore
-└── public/
-    ├── index.html
-    ├── style.css
-    └── app.js
-```
-
----
-
-## Requirements
-
-See **`node.txt`** for full details. Short version: **Node.js 22.5.0 or
-newer** (check with `node -v`), because the backend uses Node's built-in
-`node:sqlite` module.
-
----
-
-## Local Setup
-
-```bash
-npm install
-npm start
-```
-
-Then open **http://localhost:3000**.
-
-`podium.db` is created automatically next to `server.js` on first run —
-no manual database setup.
-
-> Camera/mic access requires `http://localhost` or `https://` — it will
-> not work if you just double-click `index.html` directly.
-
----
-
-## Flow Diagrams
+## Architecture & Flow Diagrams
 
 ### 1. System Architecture
 
@@ -203,7 +206,7 @@ check 8 badge conditions"]
 by average score"]
 ```
 
-### User Flow Diagram
+### 7. User Flow Diagram
 
 ```mermaid
 flowchart TD
@@ -227,60 +230,126 @@ vs-last-time comparison"]
 
 ---
 
-## Deploying to Hugging Face Spaces
+## Getting Started
 
-Hugging Face Spaces can run this project using the **Docker** SDK, since
-it needs an always-on server (not a serverless function like Vercel or
-Netlify use, which don't keep a persistent filesystem for `podium.db`).
+### Requirements
 
-### Steps
+**Node.js 22.5.0 or newer** (check with `node -v`) — the backend uses
+Node's built-in `node:sqlite` module, added in that version. See
+`node.txt` for upgrade instructions if you're on an older version.
 
-1. Go to **huggingface.co** → **New Space**.
-2. Choose:
-   - **SDK: Docker**
-   - Visibility: your choice (public/private)
-3. Push this project's files (including the `Dockerfile`) to the Space's
-   repo, the same way you'd push to GitHub:
-   ```bash
-   git remote add space https://huggingface.co/spaces/<your-username>/<space-name>
-   git push space main
-   ```
-4. At the very top of the Space's `README.md`, Hugging Face requires a
-   metadata block. Add this (edit the values as you like):
-   ```yaml
-   ---
-   title: Podium AI Interview Coach
-   emoji: 🎤
-   colorFrom: yellow
-   colorTo: pink
-   sdk: docker
-   app_port: 7860
-   pinned: false
-   ---
-   ```
-5. Hugging Face will build the `Dockerfile` automatically and start your
-   app. It listens on port `7860` by default on Spaces — the
-   `Dockerfile` already sets `ENV PORT=7860`, and `server.js` already
-   reads `process.env.PORT`, so no code changes are needed.
+### Run locally
 
-### Important limitation
+```bash
+git clone https://github.com/Kaweri05/Podium-An-interview-coach.git
+cd Podium-An-interview-coach
+npm install
+npm start
+```
 
-Free Hugging Face Spaces **do not guarantee persistent disk storage** —
-the container can restart on rebuilds or after inactivity, which resets
-`podium.db` back to empty. This is fine for demoing the project, but
-don't rely on it for real, permanent user accounts yet. When you're
-ready to expand this project, look into:
-- Hugging Face's **Persistent Storage** add-on (paid, but cheap), or
-- Swapping SQLite for a hosted free database like **Supabase** (Postgres)
-  or **Turso** (SQLite-compatible, but hosted) — both survive restarts.
+Open **http://localhost:3000**. `podium.db` is created automatically on
+first run — no manual database setup needed.
+
+> Camera/mic access requires `http://localhost` or `https://` — it will
+> not work if you just double-click `index.html` directly.
 
 ---
 
-## Roadmap (future features)
+## Project Structure
 
-- Real JWT-based auth with expiry + refresh tokens
-- Password reset flow
-- Move from SQLite to Postgres for multi-instance / persistent hosting
-- Rate limiting on `/api/signup` and `/api/login`
-- Optional AI-graded answer content (via an LLM) alongside the existing
-  heuristic scoring
+Full annotated tree in `structure.txt`. Summary:
+
+```
+Podium/
+├── server.js          Express API: auth, sessions, leaderboard
+├── package.json        Dependencies: express, bcryptjs
+├── node.txt              Node.js version requirement + notes
+├── structure.txt          Full annotated file tree
+├── Dockerfile              Container build for Hugging Face Spaces
+├── .dockerignore
+├── .gitignore
+└── public/
+    ├── index.html          App shell / screens
+    ├── style.css            Theming, layout, components
+    └── app.js                Question banks, scoring engine,
+                              dashboard logic, API client
+```
+
+---
+
+## Deployment
+
+This project is deployed as a **Docker Space on Hugging Face** — chosen
+specifically because it needs an always-on server with a real
+filesystem (SQLite), which rules out serverless platforms like Vercel
+or Netlify (their filesystem resets on every request, which would wipe
+the database constantly).
+
+### Deploy your own copy to Hugging Face Spaces
+
+1. **Create the Space**
+   Go to [huggingface.co](https://huggingface.co) → **New Space** →
+   choose **SDK: Docker**, template **Blank**.
+
+2. **Get a write-access token**
+   [huggingface.co/settings/tokens](https://huggingface.co/settings/tokens)
+   → **New token** → Write access.
+
+3. **Push this project to the Space**
+   ```bash
+   git clone https://huggingface.co/spaces/<your-username>/<space-name>
+   cd <space-name>
+   # copy in server.js, package.json, package-lock.json, node.txt,
+   # structure.txt, README.md, Dockerfile, .dockerignore, .gitignore,
+   # and the public/ folder
+   git add .
+   git commit -m "Deploy Podium"
+   git push origin main
+   ```
+   When prompted for a password, paste the **access token** from step 2
+   (not your Hugging Face account password).
+
+4. **Metadata block**
+   The YAML block at the very top of this README (title, emoji,
+   `sdk: docker`, `app_port: 7860`) is what tells Hugging Face how to
+   build and run the Space — it needs to be the first thing in the file,
+   with nothing before the opening `---`.
+
+5. **Build & run**
+   Hugging Face automatically builds `Dockerfile` and starts the app.
+   Spaces expose port `7860` by default; the Dockerfile sets
+   `ENV PORT=7860` and `server.js` already reads `process.env.PORT`, so
+   no code changes are required.
+
+### ⚠️ Known limitation
+
+Free Hugging Face Spaces **do not guarantee persistent disk storage** —
+a rebuild or restart after inactivity resets `podium.db` to empty. Fine
+for a demo/portfolio deployment; for production-grade persistence,
+options include Hugging Face's paid Persistent Storage add-on, or
+swapping SQLite for a hosted free database like **Supabase** (Postgres)
+or **Turso** (hosted SQLite).
+
+---
+
+## Roadmap
+
+- [ ] Real JWT-based auth with expiry + refresh tokens
+- [ ] Password reset flow
+- [ ] Move to Postgres for persistent, multi-instance hosting
+- [ ] Rate limiting on `/api/signup` and `/api/login`
+- [ ] Optional LLM-graded answer content alongside the existing
+      heuristic scoring engine
+- [ ] Exportable PDF interview reports
+
+---
+
+## License
+
+MIT — free to use, modify, and build on.
+
+---
+
+*Built by [Kaweri](https://github.com/Kaweri05) as a full-stack project
+covering frontend UX, browser media APIs, backend API design, and
+Docker-based deployment.*
