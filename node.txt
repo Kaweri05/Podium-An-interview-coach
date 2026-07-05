@@ -1,0 +1,49 @@
+PODIUM — NODE.JS REQUIREMENTS
+==============================
+
+Required version: Node.js 22.5.0 or newer
+Why: the backend uses Node's BUILT-IN "node:sqlite" module for the
+database. That module was added in Node 22.5 — on anything older, the
+server will fail to start with an error like "Cannot find module
+'node:sqlite'".
+
+--------------------------------------------------
+HOW TO CHECK YOUR CURRENT VERSION
+--------------------------------------------------
+Open a terminal (Git Bash / Command Prompt / PowerShell / macOS Terminal)
+and run:
+
+    node -v
+
+Example output:
+    v22.22.2   <- good, this works
+    v18.19.0   <- too old, needs an upgrade
+
+--------------------------------------------------
+HOW TO INSTALL / UPGRADE NODE.JS
+--------------------------------------------------
+1. Go to https://nodejs.org
+2. Download the "LTS" version (it will already be 22.x or newer as of
+   mid-2026) for your operating system.
+3. Run the installer, accept the defaults.
+4. Close and reopen your terminal, then re-check with "node -v".
+
+On Windows, if you use nvm-windows or similar version managers instead:
+    nvm install 22.5.0
+    nvm use 22.5.0
+
+--------------------------------------------------
+NPM VERSION
+--------------------------------------------------
+Any recent npm works (it comes bundled with Node). Check with:
+
+    npm -v
+
+--------------------------------------------------
+IF YOU CAN'T UPGRADE NODE
+--------------------------------------------------
+If you're stuck on an older Node version for some reason, this project
+can be switched from "node:sqlite" to the "better-sqlite3" npm package
+instead, which works on older Node versions but requires native build
+tools (Python + a C++ compiler) to install. Ask for this swap if needed
+— it changes db.js/server.js slightly but keeps everything else the same.

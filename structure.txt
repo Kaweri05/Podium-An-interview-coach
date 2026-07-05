@@ -1,0 +1,62 @@
+PODIUM — PROJECT STRUCTURE
+===========================
+
+Podium/
+│
+├── server.js               Backend: Express server + all API routes
+│                           (signup, login, sessions, leaderboard).
+│                           Creates and talks to podium.db automatically.
+│
+├── package.json            Project name, scripts (npm start), and the
+│                           two dependencies: express, bcryptjs.
+├── package-lock.json        Exact locked dependency versions (auto-generated
+│                           by npm — don't edit by hand).
+│
+├── node.txt                 Node.js version requirement + setup notes.
+├── structure.txt             This file.
+├── README.md                 Full project overview, setup steps, and
+│                           flow diagrams (see below).
+│
+├── Dockerfile                Container build instructions — used when
+│                           deploying to Hugging Face Spaces (or any
+│                           other Docker-based host).
+├── .dockerignore             Tells Docker which files to skip when
+│                           building the image (node_modules, db file).
+├── .gitignore                 Tells Git which files to skip when
+│                           committing (node_modules, db file, .env).
+│
+├── podium.db                 (created automatically the first time you
+│                           run the server — NOT committed to Git)
+│
+└── public/                   Everything the browser actually loads.
+    │                        Served as static files by server.js.
+    │
+    ├── index.html            Page structure: login screen, dashboard,
+    │                        interview setup, live interview screen,
+    │                        and the final report screen.
+    │
+    ├── style.css              All visual styling — dark/light theme,
+    │                        gauges, cards, badges, mobile layout.
+    │
+    └── app.js                 All frontend logic:
+                                 - question banks (HR, technical per
+                                   role, Amazon/startup rounds, resume-
+                                   based question generation)
+                                 - camera/mic capture + speech-to-text
+                                 - confidence scoring heuristics
+                                 - dashboard, badges, streaks, spotlight,
+                                   leaderboard rendering
+                                 - talks to the backend via fetch() calls
+                                   to /api/... endpoints
+
+--------------------------------------------------
+HOW A REQUEST FLOWS THROUGH THIS STRUCTURE
+--------------------------------------------------
+Browser (public/app.js)
+   → fetch("/api/...")
+      → server.js (Express route)
+         → node:sqlite query against podium.db
+      ← JSON response
+   ← app.js updates the DOM (dashboard, report, etc.)
+
+See README.md for full diagrams of each flow.

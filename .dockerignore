@@ -1,0 +1,7 @@
+node_modules
+podium.db
+podium.db-shm
+podium.db-wal
+.git
+.gitignore
+*.log
